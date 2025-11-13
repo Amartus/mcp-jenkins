@@ -1,4 +1,5 @@
 import re
+import os
 from typing import Literal
 from uuid import uuid4
 
@@ -150,3 +151,28 @@ class JenkinsBuild:
             duration=test_report.get('duration', 0.0),
             suites=suites,
         )
+
+    def save_build_artifact(self, fullname: str, number: int, artifact: str, save_path: str) -> str:
+        """
+        Download a build artifact and save it directly to disk.
+        
+        Args:
+            fullname: The fullname of the job
+            number: The build number
+            artifact: The relative path of the artifact
+            save_path: The full path where to save the file (including filename)
+        
+        Returns:
+            str: The absolute path where the file was saved
+        """
+        
+        artifact_bytes = self._jenkins.get_build_artifact_as_bytes(fullname, number, artifact)
+        
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+        # Write the file
+        with open(save_path, 'wb') as f:
+            f.write(artifact_bytes)
+        
+        return os.path.abspath(save_path)

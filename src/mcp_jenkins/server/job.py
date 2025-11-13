@@ -146,3 +146,33 @@ async def scan_multibranch_pipeline(ctx: Context, fullname: str) -> str:
         return f'Successfully triggered scan for multibranch pipeline: {fullname}'
     else:
         return f'Failed to trigger scan. Status code: {response.status_code}'
+
+@mcp.tool(tag='read')
+async def get_all_views(ctx: Context) -> list[dict]:
+    """
+    Get all views from Jenkins
+
+    Returns:
+        list[dict]: A list of all views
+    """
+    # return [
+    #     view.model_dump(exclude_none=True)
+    #     for view in client(ctx).job.get_views()
+    # ]
+    return client(ctx).job.get_all_views()
+
+@mcp.tool(tag='read')
+async def get_jobs_per_view(ctx: Context, view_name: str) -> list[dict]:
+    """
+    Get all jobs for a specific view from Jenkins
+
+    Args:
+        view_name: The name of the view 
+
+    Returns:
+        list[dict]: A list of all jobs in the specified view
+    """
+    return [
+        job.model_dump(exclude_none=True)
+        for job in client(ctx).job.get_job_per_view(view_name)
+    ]

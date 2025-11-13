@@ -176,3 +176,26 @@ async def get_test_results(
         return filtered_report.model_dump(exclude_none=True)
 
     return test_report.model_dump(exclude_none=True)
+
+@mcp.tool(tag='write')
+async def save_build_artifact(
+    ctx: Context,
+    fullname: str,
+    build_number: int,
+    artifact_path: str,
+    save_path: str,
+) -> str:
+    """
+    Download a build artifact from Jenkins and save it directly to disk (optimized for large files)
+
+    Args:
+        fullname: The fullname of the job
+        build_number: The number of the build
+        artifact_path: The relative path of the artifact in Jenkins (e.g., 'eks_logs_951.zip')
+        save_path: The full local path where to save the file (e.g., '/path/to/directory/eks_logs_951.zip')
+
+    Returns:
+        str: The absolute path where the file was saved
+    """
+    return client(ctx).build.save_build_artifact(fullname, build_number, artifact_path, save_path)
+

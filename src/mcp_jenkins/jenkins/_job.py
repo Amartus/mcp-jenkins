@@ -59,3 +59,10 @@ class JenkinsJob:
 
     def get_job_info(self, fullname: str) -> JobBase:
         return self._to_model(self._jenkins.get_job_info(fullname, depth=1))
+
+    def get_all_views(self) -> list[dict]:
+        return self._jenkins.get_views()
+
+    def get_job_per_view(self, view_name: str) -> list[JobBase]:
+        jobs = self._jenkins.get_jobs(view_name=view_name, folder_depth=20)
+        return [self._to_model(job) for job in jobs]
