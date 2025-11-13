@@ -150,10 +150,10 @@ async def scan_multibranch_pipeline(ctx: Context, fullname: str) -> str:
 @mcp.tool(tag='read')
 async def get_all_views(ctx: Context) -> list[dict]:
     """
-    Get all views from Jenkins
+    List all views from Jenkins
 
     Returns:
-        list[dict]: A list of all views
+        list[dict]: All Jenkins views
     """
     # return [
     #     view.model_dump(exclude_none=True)
@@ -164,13 +164,13 @@ async def get_all_views(ctx: Context) -> list[dict]:
 @mcp.tool(tag='read')
 async def get_jobs_per_view(ctx: Context, view_name: str) -> list[dict]:
     """
-    Get all jobs for a specific view from Jenkins
+    List jobs belonging to a specific view
 
     Args:
-        view_name: The name of the view 
+        view_name: Name of the view
 
     Returns:
-        list[dict]: A list of all jobs in the specified view
+        list[dict]: Jobs in the view
     """
     return [
         job.model_dump(exclude_none=True)
